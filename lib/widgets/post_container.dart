@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:facebook_ui_mockup/config/paletter.dart';
 import 'package:facebook_ui_mockup/models/post_model.dart';
 import 'package:facebook_ui_mockup/widgets/profile_avatar.dart';
+import 'package:facebook_ui_mockup/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -10,42 +11,51 @@ class PostContainer extends StatelessWidget {
   PostContainer({Key key, @required this.post}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
-        padding: EdgeInsets.symmetric(vertical: 8),
-        color: Colors.white,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _PostHeader(post: post),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(post.caption),
-                  post.imageUrl != null
-                      ? const SizedBox.shrink()
-                      : SizedBox(
-                          height: 6,
-                        )
-                ],
+    final bool isDesktop = Responsive.isDesktop(context);
+    return Card(
+      margin: EdgeInsets.symmetric(
+          horizontal: isDesktop ? 5 : 0, vertical: isDesktop ? 5 : 0),
+      elevation: isDesktop ? 1 : 0,
+      shape: isDesktop
+          ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+          : null,
+      child: Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          padding: EdgeInsets.symmetric(vertical: 8),
+          color: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _PostHeader(post: post),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(post.caption),
+                    post.imageUrl != null
+                        ? const SizedBox.shrink()
+                        : SizedBox(
+                            height: 6,
+                          )
+                  ],
+                ),
               ),
-            ),
-            post.imageUrl != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: CachedNetworkImage(imageUrl: post.imageUrl),
-                  )
-                : const SizedBox.shrink(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: _PostStats(post: post),
-            )
-          ],
-        ));
+              post.imageUrl != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: CachedNetworkImage(imageUrl: post.imageUrl),
+                    )
+                  : const SizedBox.shrink(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: _PostStats(post: post),
+              )
+            ],
+          )),
+    );
   }
 }
 
